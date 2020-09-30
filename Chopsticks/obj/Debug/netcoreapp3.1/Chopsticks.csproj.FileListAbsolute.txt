@@ -1,0 +1,12 @@
+/Users/abrampithey/RiderProjects/ChopsticksCore/Chopsticks/bin/Debug/netcoreapp3.1/Chopsticks.deps.json
+/Users/abrampithey/RiderProjects/ChopsticksCore/Chopsticks/bin/Debug/netcoreapp3.1/Chopsticks.runtimeconfig.json
+/Users/abrampithey/RiderProjects/ChopsticksCore/Chopsticks/bin/Debug/netcoreapp3.1/Chopsticks.runtimeconfig.dev.json
+/Users/abrampithey/RiderProjects/ChopsticksCore/Chopsticks/bin/Debug/netcoreapp3.1/Chopsticks.dll
+/Users/abrampithey/RiderProjects/ChopsticksCore/Chopsticks/bin/Debug/netcoreapp3.1/Chopsticks.pdb
+/Users/abrampithey/RiderProjects/ChopsticksCore/Chopsticks/obj/Debug/netcoreapp3.1/Chopsticks.csprojAssemblyReference.cache
+/Users/abrampithey/RiderProjects/ChopsticksCore/Chopsticks/obj/Debug/netcoreapp3.1/Chopsticks.AssemblyInfoInputs.cache
+/Users/abrampithey/RiderProjects/ChopsticksCore/Chopsticks/obj/Debug/netcoreapp3.1/Chopsticks.AssemblyInfo.cs
+/Users/abrampithey/RiderProjects/ChopsticksCore/Chopsticks/obj/Debug/netcoreapp3.1/Chopsticks.csproj.CoreCompileInputs.cache
+/Users/abrampithey/RiderProjects/ChopsticksCore/Chopsticks/obj/Debug/netcoreapp3.1/Chopsticks.dll
+/Users/abrampithey/RiderProjects/ChopsticksCore/Chopsticks/obj/Debug/netcoreapp3.1/Chopsticks.pdb
+/Users/abrampithey/RiderProjects/ChopsticksCore/Chopsticks/obj/Debug/netcoreapp3.1/Chopsticks.genruntimeconfig.cache
