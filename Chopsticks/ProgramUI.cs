@@ -114,14 +114,14 @@ namespace Chopsticks
             while (playing)
             {
                 ShowCurrentTotals();
-                playing = Attack(_playerOne, _playerTwo);
+                playing = HumanAttack(_playerOne, _playerTwo);
                 if (!playing) continue;
                 ShowCurrentTotals();
-                playing = Attack(_playerTwo, _playerOne);
+                playing = HumanAttack(_playerTwo, _playerOne);
             }
         }
 
-        public bool Attack(Player attacker, Player defender)
+        public bool HumanAttack(Player attacker, Player defender)
         {
             Console.WriteLine("Choose your attack:\n" +
                               "Press 1 to Attack the Opponent's left hand with your left hand\n" +
@@ -177,7 +177,7 @@ namespace Chopsticks
                               $"Player 2: Left - {_playerTwo.LeftHand}   Right - {_playerTwo.RightHand}");
         }
         
-        public void ComputerTurn(Player computer, Player human)
+        public bool ComputerTurn(Player computer, Player human)
         {
             int randomizedDecision = _logic.PickRandomNumberForComputer();
             switch (randomizedDecision)
@@ -195,6 +195,8 @@ namespace Chopsticks
                     _playerOne.RightHand = _logic.CalculateHand(_playerTwo.RightHand, _playerOne.RightHand);
                     break;
             }
+            
+            return _playerOne.LeftHand != 0 || _playerOne.RightHand != 0;
         }
     }
 }
