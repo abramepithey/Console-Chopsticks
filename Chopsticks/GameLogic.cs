@@ -16,9 +16,7 @@ namespace Chopsticks
         public int CalculateHand(int attackHand, int defendHand)
         {
             int newDefendHand = defendHand + attackHand;
-            if (newDefendHand == 5)
-                return 0;
-            if (newDefendHand > 5)
+            if (newDefendHand >= 5)
                 return newDefendHand - 5;
             return newDefendHand;
         }
