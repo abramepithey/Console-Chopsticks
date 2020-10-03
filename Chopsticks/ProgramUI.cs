@@ -7,6 +7,8 @@ namespace Chopsticks
     public class ProgramUI
     {
         private GameLogic _logic;
+        private Player _playerOne;
+        private Player _playerTwo;
         
         public void Run()
         {
@@ -44,9 +46,9 @@ namespace Chopsticks
                               "4. Exit");
         }
 
-        public bool MenuChoice()
+        private bool MenuChoice()
         {
-            string response = Console.ReadLine()?.ToLower();
+            var response = Console.ReadLine()?.ToLower();
             switch (response)
             {
                 case "1":
@@ -78,7 +80,7 @@ namespace Chopsticks
             return true;
         }
 
-        private void Rules()
+        private static void Rules()
         {
             Console.WriteLine("Each player begins with one finger raised on each hand. After the first player, turns proceed clockwise.\n" +
                               "On a player's turn, they must either attack or split, but not both.\n" +
@@ -89,9 +91,10 @@ namespace Chopsticks
                               "If any hand of any player reaches more than five fingers, then five fingers are subtracted from that hand. For instance, if a 4-finger hand strikes a 2-finger hand, for a total of 6 fingers, then 5 fingers are automatically subtracted, leaving 1 finger.\n" +
                               "A player wins once all opponents are eliminated (by each having two dead hands at once).");
             Console.ReadKey();
+            Console.Clear();
         }
 
-        private void Exit()
+        private static void Exit()
         {
             Console.WriteLine("Exiting program...");
             Thread.Sleep(2000);
@@ -104,16 +107,93 @@ namespace Chopsticks
 
         public void PlayHuman()
         {
-            _logic = new GameLogic();
-            Console.WriteLine("Enter the name for player one:");
-            string firstNameResponse = Console.ReadLine();
-            Console.WriteLine("Enter the name for player two:");
-            string secondNameResponse = Console.ReadLine();
-            _logic.NamePlayers(firstNameResponse, secondNameResponse);
+            CreatePlayerOne();
+            CreatePlayerTwo();
+            _logic = new GameLogic(_playerOne, _playerTwo);
             bool playing = true;
             while (playing)
             {
-                
+                ShowCurrentTotals();
+                playing = Attack(_playerOne, _playerTwo);
+                if (!playing) continue;
+                ShowCurrentTotals();
+                playing = Attack(_playerTwo, _playerOne);
+            }
+        }
+
+        public bool Attack(Player attacker, Player defender)
+        {
+            Console.WriteLine("Choose your attack:\n" +
+                              "Press 1 to Attack the Opponent's left hand with your left hand\n" +
+                              "Press 2 to Attack the Opponent's right hand with your left hand\n" +
+                              "Press 3 to Attack the Opponent's left hand with your right hand\n" +
+                              "Press 4 to Attack the Opponent's right hand with your right hand");
+            
+            bool responding = true;
+            while (responding)
+            {
+                string response = Console.ReadLine();
+                responding = false;
+                switch (response)
+                {
+                    case "1":
+                        defender.LeftHand = _logic.CalculateHand(attacker.LeftHand, defender.LeftHand);
+                        break;
+                    case "2":
+                        defender.RightHand = _logic.CalculateHand(attacker.LeftHand, defender.RightHand);
+                        break;
+                    case "3":
+                        defender.LeftHand = _logic.CalculateHand(attacker.RightHand, defender.LeftHand);
+                        break;
+                    case "4":
+                        defender.RightHand = _logic.CalculateHand(attacker.RightHand, defender.RightHand);
+                        break;
+                    default:
+                        Console.WriteLine("Please enter a valid selection.");
+                        responding = true;
+                        break;
+                }
+            }
+            
+            return defender.LeftHand != 0 || defender.RightHand != 0;
+        }
+
+        public void CreatePlayerOne()
+        {
+            Console.WriteLine("Enter a name for Player 1:");
+            _playerOne = new Player(Console.ReadLine());
+        }
+
+        public void CreatePlayerTwo()
+        {
+            Console.WriteLine("Enter a name for Player 2:");
+            _playerTwo = new Player(Console.ReadLine());
+        }
+
+        private void ShowCurrentTotals()
+        {
+            Console.Clear();
+            Console.WriteLine($"Player 1: Left - {_playerOne.LeftHand}   Right - {_playerOne.RightHand}\n\n" +
+                              $"Player 2: Left - {_playerTwo.LeftHand}   Right - {_playerTwo.RightHand}");
+        }
+        
+        public void ComputerTurn(Player computer, Player human)
+        {
+            int randomizedDecision = _logic.PickRandomNumberForComputer();
+            switch (randomizedDecision)
+            {
+                case 1:
+                    _playerOne.LeftHand = _logic.CalculateHand(_playerTwo.LeftHand, _playerOne.LeftHand);
+                    break;
+                case 2:
+                    _playerOne.RightHand = _logic.CalculateHand(_playerTwo.LeftHand, _playerOne.RightHand);
+                    break;
+                case 3:
+                    _playerOne.LeftHand = _logic.CalculateHand(_playerTwo.RightHand, _playerOne.LeftHand);
+                    break;
+                case 4:
+                    _playerOne.RightHand = _logic.CalculateHand(_playerTwo.RightHand, _playerOne.RightHand);
+                    break;
             }
         }
     }
