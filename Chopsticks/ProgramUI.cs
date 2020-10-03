@@ -123,7 +123,7 @@ namespace Chopsticks
 
         public bool HumanAttack(Player attacker, Player defender)
         {
-            Console.WriteLine("Choose your attack:\n" +
+            Console.WriteLine($"{attacker.Name}, Choose your attack:\n" +
                               "Press 1 to Attack the Opponent's left hand with your left hand\n" +
                               "Press 2 to Attack the Opponent's right hand with your left hand\n" +
                               "Press 3 to Attack the Opponent's left hand with your right hand\n" +
@@ -173,8 +173,8 @@ namespace Chopsticks
         private void ShowCurrentTotals()
         {
             Console.Clear();
-            Console.WriteLine($"Player 1: Left - {_playerOne.LeftHand}   Right - {_playerOne.RightHand}\n\n" +
-                              $"Player 2: Left - {_playerTwo.LeftHand}   Right - {_playerTwo.RightHand}");
+            Console.WriteLine($"{_playerOne.Name}: Left - {_playerOne.LeftHand}   Right - {_playerOne.RightHand}\n\n" +
+                              $"{_playerTwo.Name}Player 2: Left - {_playerTwo.LeftHand}   Right - {_playerTwo.RightHand}");
         }
         
         public bool ComputerTurn(Player computer, Player human)
