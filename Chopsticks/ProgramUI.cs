@@ -109,7 +109,7 @@ namespace Chopsticks
         {
             CreatePlayerOne();
             CreatePlayerTwo();
-            _logic = new GameLogic(_playerOne, _playerTwo);
+            _logic = new GameLogic();
             bool playing = true;
             while (playing)
             {
