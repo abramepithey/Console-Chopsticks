@@ -114,20 +114,21 @@ namespace Chopsticks
             while (playing)
             {
                 ShowCurrentTotals();
-                playing = HumanAttack(_playerOne, _playerTwo);
+                playing = HumanPickHandForAttack(_playerOne, _playerTwo);
                 if (!playing) continue;
                 ShowCurrentTotals();
-                playing = HumanAttack(_playerTwo, _playerOne);
+                playing = HumanPickHandForAttack(_playerTwo, _playerOne);
             }
+            ShowCurrentTotals();
+            Console.WriteLine("That's the game!");
+            Console.ReadKey();
         }
 
-        public bool HumanAttack(Player attacker, Player defender)
+        public bool HumanPickHandForAttack(Player attacker, Player defender)
         {
-            Console.WriteLine($"{attacker.Name}, Choose your attack:\n" +
-                              "Press 1 to Attack the Opponent's left hand with your left hand\n" +
-                              "Press 2 to Attack the Opponent's right hand with your left hand\n" +
-                              "Press 3 to Attack the Opponent's left hand with your right hand\n" +
-                              "Press 4 to Attack the Opponent's right hand with your right hand");
+            Console.WriteLine($"{attacker.Name}, Choose your hand to attack with:\n" +
+                              "Press 1 to Attack the Opponent with your left hand\n" +
+                              "Press 2 to Attack the Opponent with your right hand");
             
             bool responding = true;
             while (responding)
@@ -137,16 +138,10 @@ namespace Chopsticks
                 switch (response)
                 {
                     case "1":
-                        defender.LeftHand = _logic.CalculateHand(attacker.LeftHand, defender.LeftHand);
+                        AttackerPickTarget(attacker.LeftHand, defender);
                         break;
                     case "2":
-                        defender.RightHand = _logic.CalculateHand(attacker.LeftHand, defender.RightHand);
-                        break;
-                    case "3":
-                        defender.LeftHand = _logic.CalculateHand(attacker.RightHand, defender.LeftHand);
-                        break;
-                    case "4":
-                        defender.RightHand = _logic.CalculateHand(attacker.RightHand, defender.RightHand);
+                        AttackerPickTarget(attacker.RightHand, defender);
                         break;
                     default:
                         Console.WriteLine("Please enter a valid selection.");
@@ -174,7 +169,41 @@ namespace Chopsticks
         {
             Console.Clear();
             Console.WriteLine($"{_playerOne.Name}: Left - {_playerOne.LeftHand}   Right - {_playerOne.RightHand}\n\n" +
-                              $"{_playerTwo.Name}Player 2: Left - {_playerTwo.LeftHand}   Right - {_playerTwo.RightHand}");
+                              $"{_playerTwo.Name}: Left - {_playerTwo.LeftHand}   Right - {_playerTwo.RightHand}\n");
+        }
+
+        public void AttackerPickTarget(int attackingNumber, Player defender)
+        {
+            if (defender.LeftHand == 0)
+                defender.RightHand = _logic.CalculateHand(attackingNumber, defender.RightHand);
+            else if (defender.RightHand == 0)
+                defender.LeftHand = _logic.CalculateHand(attackingNumber, defender.LeftHand);
+            else if (defender.LeftHand != 0 && defender.RightHand != 0)
+            {
+                Console.WriteLine("Choose your target:\n" +
+                                  "Press 1 to Attack the Opponent's left hand\n" +
+                                  "Press 2 to Attack the Opponent's right hand");
+            
+                bool responding = true;
+                while (responding)
+                {
+                    string response = Console.ReadLine();
+                    responding = false;
+                    switch (response)
+                    {
+                        case "1":
+                            defender.LeftHand = _logic.CalculateHand(attackingNumber, defender.LeftHand);
+                            break;
+                        case "2":
+                            defender.RightHand = _logic.CalculateHand(attackingNumber, defender.RightHand);
+                            break;
+                        default:
+                            Console.WriteLine("Please enter a valid selection.");
+                            responding = true;
+                            break;
+                    }
+                }
+            }
         }
         
         public bool ComputerTurn(Player computer, Player human)
