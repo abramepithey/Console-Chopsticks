@@ -125,7 +125,7 @@ namespace Chopsticks
 
         public bool InitializeAttack(Player attacker, Player defender)
         {
-            bool autoSelect = AttackCheckForOptions(attacker, defender);
+            bool autoSelect = PickAttackingHandCheckForOptions(attacker, defender);
             if (autoSelect == false)
                 HumanPickHandForAttack(attacker, defender);
             return defender.LeftHand != 0 || defender.RightHand != 0;
@@ -145,10 +145,10 @@ namespace Chopsticks
                 switch (response)
                 {
                     case "1":
-                        AttackerPickTarget(attacker.Name ,attacker.LeftHand, defender);
+                        AttackerTarget(attacker.Name, attacker.LeftHand, defender);
                         break;
                     case "2":
-                        AttackerPickTarget(attacker.Name ,attacker.RightHand, defender);
+                        AttackerTarget(attacker.Name, attacker.RightHand, defender);
                         break;
                     default:
                         Console.WriteLine("Please enter a valid selection.");
@@ -158,14 +158,14 @@ namespace Chopsticks
             }
         }
 
-        private bool AttackCheckForOptions(Player attacker, Player defender)
+        private bool PickAttackingHandCheckForOptions(Player attacker, Player defender)
         {
             if (attacker.LeftHand == 0)
             {
                 Console.WriteLine($"{attacker.Name}, you can only attack with your Right hand:\n" +
                                   "Press anything to continue...");
                 Console.ReadKey();
-                AttackerPickTarget(attacker.Name, attacker.RightHand, defender);
+                AttackerTarget(attacker.Name, attacker.RightHand, defender);
                 return true;
             }
             if (attacker.RightHand == 0)
@@ -173,7 +173,7 @@ namespace Chopsticks
                 Console.WriteLine($"{attacker.Name}, you can only attack with your Left hand:\n" +
                                   "Press anything to continue...");
                 Console.ReadKey();
-                AttackerPickTarget(attacker.Name ,attacker.LeftHand, defender);
+                AttackerTarget(attacker.Name ,attacker.LeftHand, defender);
                 return true;
             }
 
@@ -199,7 +199,14 @@ namespace Chopsticks
                               $"{_playerTwo.Name}: Left - {_playerTwo.LeftHand}   Right - {_playerTwo.RightHand}\n");
         }
 
-        public void AttackerPickTarget(string name, int attackingNumber, Player defender)
+        public void AttackerTarget(string name, int attackingNumber, Player defender)
+        {
+            bool autoSelect = PickDefendingHandCheckForAutomaticTarget(name, attackingNumber, defender);
+            if (autoSelect == false)
+                AttackerPickTarget(name, attackingNumber, defender);
+        }
+
+        public bool PickDefendingHandCheckForAutomaticTarget(string name, int attackingNumber, Player defender)
         {
             if (defender.LeftHand == 0)
             {
@@ -207,38 +214,43 @@ namespace Chopsticks
                                   $"Press anything to continue...");
                 Console.ReadKey();
                 defender.RightHand = _logic.CalculateHand(attackingNumber, defender.RightHand);
+                return true;
             }
-            else if (defender.RightHand == 0)
+            if (defender.RightHand == 0)
             {
                 Console.WriteLine($"{name}, you attack the left hand:\n" +
                                   $"Press anything to continue...");
                 Console.ReadKey();
                 defender.LeftHand = _logic.CalculateHand(attackingNumber, defender.LeftHand);
-            } 
-            else if (defender.LeftHand != 0 && defender.RightHand != 0)
-            {
-                Console.WriteLine($"{name}, Choose your target:\n" +
-                                  "Press 1 to Attack the Opponent's left hand\n" +
-                                  "Press 2 to Attack the Opponent's right hand");
+                return true;
+            }
+
+            return false;
+        }
+
+        public void AttackerPickTarget(string name, int attackingNumber, Player defender)
+        {
+            Console.WriteLine($"{name}, Choose your target:\n" +
+                              "Press 1 to Attack the Opponent's left hand\n" +
+                              "Press 2 to Attack the Opponent's right hand");
             
-                bool responding = true;
-                while (responding)
+            bool responding = true;
+            while (responding)
+            {
+                string response = Console.ReadLine();
+                responding = false;
+                switch (response)
                 {
-                    string response = Console.ReadLine();
-                    responding = false;
-                    switch (response)
-                    {
-                        case "1":
-                            defender.LeftHand = _logic.CalculateHand(attackingNumber, defender.LeftHand);
-                            break;
-                        case "2":
-                            defender.RightHand = _logic.CalculateHand(attackingNumber, defender.RightHand);
-                            break;
-                        default:
-                            Console.WriteLine("Please enter a valid selection.");
-                            responding = true;
-                            break;
-                    }
+                    case "1":
+                        defender.LeftHand = _logic.CalculateHand(attackingNumber, defender.LeftHand);
+                        break;
+                    case "2":
+                        defender.RightHand = _logic.CalculateHand(attackingNumber, defender.RightHand);
+                        break;
+                    default:
+                        Console.WriteLine("Please enter a valid selection.");
+                        responding = true;
+                        break;
                 }
             }
         }
