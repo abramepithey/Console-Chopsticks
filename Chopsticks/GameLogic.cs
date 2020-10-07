@@ -15,7 +15,7 @@ namespace Chopsticks
         public int PickRandomNumberForComputer()
         {
             Random randNum = new Random();
-            return randNum.Next(1, 5);
+            return randNum.Next(1, 3);
         }
     }
 }
