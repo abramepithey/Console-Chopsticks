@@ -4,7 +4,7 @@ namespace Chopsticks
 {
     public static class GameLogic
     {
-        public static int CalculateHand(int attackHand, int defendHand)
+        public static int CalculateHandAfterAttack(int attackHand, int defendHand)
         {
             int newDefendHand = defendHand + attackHand;
             if (newDefendHand >= 5)
