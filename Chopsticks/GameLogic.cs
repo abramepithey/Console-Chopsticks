@@ -2,9 +2,9 @@ using System;
 
 namespace Chopsticks
 {
-    public class GameLogic
+    public static class GameLogic
     {
-        public int CalculateHand(int attackHand, int defendHand)
+        public static int CalculateHand(int attackHand, int defendHand)
         {
             int newDefendHand = defendHand + attackHand;
             if (newDefendHand >= 5)
@@ -12,7 +12,7 @@ namespace Chopsticks
             return newDefendHand;
         }
 
-        public int PickRandomNumberForComputer()
+        public static int PickRandomNumberForComputer()
         {
             Random randNum = new Random();
             return randNum.Next(1, 3);

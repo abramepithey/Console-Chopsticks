@@ -6,7 +6,6 @@ namespace Chopsticks
 {
     public class ProgramUI
     {
-        private GameLogic _logic;
         private Player _playerOne;
         private Player _playerTwo;
         
@@ -109,7 +108,6 @@ namespace Chopsticks
         {
             CreatePlayerOne();
             CreatePlayerTwo();
-            _logic = new GameLogic();
             bool playing = true;
             while (playing)
             {
@@ -213,7 +211,7 @@ namespace Chopsticks
                 Console.WriteLine($"{name}, you attack the right hand:\n" +
                                   $"Press anything to continue...");
                 Console.ReadKey();
-                defender.RightHand = _logic.CalculateHand(attackingNumber, defender.RightHand);
+                defender.RightHand = GameLogic.CalculateHand(attackingNumber, defender.RightHand);
                 return true;
             }
             if (defender.RightHand == 0)
@@ -221,7 +219,7 @@ namespace Chopsticks
                 Console.WriteLine($"{name}, you attack the left hand:\n" +
                                   $"Press anything to continue...");
                 Console.ReadKey();
-                defender.LeftHand = _logic.CalculateHand(attackingNumber, defender.LeftHand);
+                defender.LeftHand = GameLogic.CalculateHand(attackingNumber, defender.LeftHand);
                 return true;
             }
 
@@ -242,10 +240,10 @@ namespace Chopsticks
                 switch (response)
                 {
                     case "1":
-                        defender.LeftHand = _logic.CalculateHand(attackingNumber, defender.LeftHand);
+                        defender.LeftHand = GameLogic.CalculateHand(attackingNumber, defender.LeftHand);
                         break;
                     case "2":
-                        defender.RightHand = _logic.CalculateHand(attackingNumber, defender.RightHand);
+                        defender.RightHand = GameLogic.CalculateHand(attackingNumber, defender.RightHand);
                         break;
                     default:
                         Console.WriteLine("Please enter a valid selection.");
@@ -253,6 +251,11 @@ namespace Chopsticks
                         break;
                 }
             }
+        }
+
+        public void SplitHands(Player player)
+        {
+            
         }
 
         private void GameOver()
@@ -266,20 +269,20 @@ namespace Chopsticks
         
         public bool ComputerTurn(Player computer, Player human)
         {
-            var randomizedDecision = _logic.PickRandomNumberForComputer();
+            var randomizedDecision = GameLogic.PickRandomNumberForComputer();
             switch (randomizedDecision)
             {
                 case 1:
-                    _playerOne.LeftHand = _logic.CalculateHand(_playerTwo.LeftHand, _playerOne.LeftHand);
+                    _playerOne.LeftHand = GameLogic.CalculateHand(_playerTwo.LeftHand, _playerOne.LeftHand);
                     break;
                 case 2:
-                    _playerOne.RightHand = _logic.CalculateHand(_playerTwo.LeftHand, _playerOne.RightHand);
+                    _playerOne.RightHand = GameLogic.CalculateHand(_playerTwo.LeftHand, _playerOne.RightHand);
                     break;
                 case 3:
-                    _playerOne.LeftHand = _logic.CalculateHand(_playerTwo.RightHand, _playerOne.LeftHand);
+                    _playerOne.LeftHand = GameLogic.CalculateHand(_playerTwo.RightHand, _playerOne.LeftHand);
                     break;
                 case 4:
-                    _playerOne.RightHand = _logic.CalculateHand(_playerTwo.RightHand, _playerOne.RightHand);
+                    _playerOne.RightHand = GameLogic.CalculateHand(_playerTwo.RightHand, _playerOne.RightHand);
                     break;
             }
             
