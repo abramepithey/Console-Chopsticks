@@ -10,7 +10,7 @@ namespace Chopsticks
     {
         private Player _playerOne;
         private Player _playerTwo;
-        
+
         public void Run()
         {
             bool isRunning = true;
@@ -122,58 +122,6 @@ namespace Chopsticks
             }
         }
 
-        public void InitializeAttack(Player attacker, Player defender)
-        {
-            bool autoSelect = PickAttackingHandCheckForOptions(attacker, defender);
-            if (autoSelect == false)
-                HumanPickHandForAttack(attacker, defender);
-        }
-
-        public void HumanPickHandForAttack(Player attacker, Player defender)
-        {
-            Console.WriteLine($"{attacker.Name}, Choose your hand to attack with:\n" +
-                              "Press 1 to Attack the Opponent with your left hand\n" +
-                              "Press 2 to Attack the Opponent with your right hand");
-            
-            bool responding = true;
-            while (responding)
-            {
-                string response = Console.ReadLine();
-                responding = false;
-                switch (response)
-                {
-                    case "1":
-                        AttackerTarget(attacker.Name, attacker.LeftHand, defender);
-                        break;
-                    case "2":
-                        AttackerTarget(attacker.Name, attacker.RightHand, defender);
-                        break;
-                    default:
-                        Console.WriteLine("Please enter a valid selection.");
-                        responding = true;
-                        break;
-                }
-            }
-        }
-
-        private bool PickAttackingHandCheckForOptions(Player attacker, Player defender)
-        {
-            if (attacker.LeftHand == 0)
-            {
-                Console.WriteLine("You can only attack with your Right hand:");
-                AttackerTarget(attacker.Name, attacker.RightHand, defender);
-                return true;
-            }
-            if (attacker.RightHand == 0)
-            {
-                Console.WriteLine("You can only attack with your Left hand:");
-                AttackerTarget(attacker.Name ,attacker.LeftHand, defender);
-                return true;
-            }
-
-            return false;
-        }
-
         private void CreatePlayerOne()
         {
             Console.WriteLine("Enter a name for Player 1:");
@@ -201,6 +149,96 @@ namespace Chopsticks
             GameOver(_playerOne);
             return false;
 
+        }
+
+        public void CheckForAbilityToSplit(Player attacker, Player defender)
+        {
+            if (attacker.LeftHand <= 1 && attacker.RightHand <= 1)
+            {
+                Console.WriteLine("You can only attack.");
+                InitializeAttack(attacker, defender);
+            }
+            else
+            {
+                ChooseAction(attacker, defender);
+            }
+        }
+
+        public void ChooseAction(Player playerAttacking, Player playerDefending)
+        {
+            Console.WriteLine($"{playerAttacking.Name}, press 1 to attack, or 2 to split.");
+            var response = Console.ReadLine();
+            var responding = true;
+            while (responding)
+            {
+                responding = false;
+                switch (response)
+                {
+                    case "1":
+                        InitializeAttack(playerAttacking, playerDefending);
+                        break;
+                    case "2":
+                        SplitHands(playerAttacking);
+                        break;
+                    default:
+                        Console.WriteLine("Please enter a valid selection.");
+                        Console.ReadKey();
+                        responding = true;
+                        break;
+                }
+            }
+        }
+
+        public void InitializeAttack(Player attacker, Player defender)
+        {
+            bool autoSelect = PickAttackingHandCheckForOptions(attacker, defender);
+            if (autoSelect == false)
+                HumanPickHandForAttack(attacker, defender);
+        }
+
+        private bool PickAttackingHandCheckForOptions(Player attacker, Player defender)
+        {
+            if (attacker.LeftHand == 0)
+            {
+                Console.WriteLine("You can only attack with your Right hand:");
+                AttackerTarget(attacker.Name, attacker.RightHand, defender);
+                return true;
+            }
+            if (attacker.RightHand == 0)
+            {
+                Console.WriteLine("You can only attack with your Left hand:");
+                AttackerTarget(attacker.Name ,attacker.LeftHand, defender);
+                return true;
+            }
+
+            return false;
+        }
+
+        public void HumanPickHandForAttack(Player attacker, Player defender)
+        {
+            Console.WriteLine($"{attacker.Name}, Choose your hand to attack with:\n" +
+                              "Press 1 to Attack the Opponent with your left hand\n" +
+                              "Press 2 to Attack the Opponent with your right hand");
+            
+            bool responding = true;
+            while (responding)
+            {
+                string response = Console.ReadLine();
+                responding = false;
+                switch (response)
+                {
+                    case "1":
+                        AttackerTarget(attacker.Name, attacker.LeftHand, defender);
+                        break;
+                    case "2":
+                        AttackerTarget(attacker.Name, attacker.RightHand, defender);
+                        break;
+                    default:
+                        Console.WriteLine("Please enter a valid selection.");
+                        responding = true;
+                        break;
+                }
+            }
         }
 
         public void AttackerTarget(string name, int attackingNumber, Player defender)
@@ -259,44 +297,6 @@ namespace Chopsticks
             }
         }
 
-        public void CheckForAbilityToSplit(Player attacker, Player defender)
-        {
-            if (attacker.LeftHand <= 1 && attacker.RightHand <= 1)
-            {
-                Console.WriteLine("You can only attack.");
-                InitializeAttack(attacker, defender);
-            }
-            else
-            {
-                ChooseAction(attacker, defender);
-            }
-        }
-
-        public void ChooseAction(Player playerAttacking, Player playerDefending)
-        {
-            Console.WriteLine($"{playerAttacking.Name}, press 1 to attack, or 2 to split.");
-            var response = Console.ReadLine();
-            var responding = true;
-            while (responding)
-            {
-                responding = false;
-                switch (response)
-                {
-                    case "1":
-                        InitializeAttack(playerAttacking, playerDefending);
-                        break;
-                    case "2":
-                        SplitHands(playerAttacking);
-                        break;
-                    default:
-                        Console.WriteLine("Please enter a valid selection.");
-                        Console.ReadKey();
-                        responding = true;
-                        break;
-                }
-            }
-        }
-
         public void SplitHands(Player player)
         {
             int leftHand = player.LeftHand;
@@ -324,7 +324,7 @@ namespace Chopsticks
             Console.WriteLine($"{winner.Name} Wins!");
             Console.ReadKey();
         }
-        
+
         public bool ComputerTurn(Player computer, Player human)
         {
             var randomizedDecision = GameLogic.PickRandomNumberForComputer();
