@@ -1,4 +1,6 @@
 using System;
+using System.Net;
+using System.Security.Cryptography.X509Certificates;
 using System.Threading;
 using Microsoft.VisualBasic.CompilerServices;
 
@@ -111,11 +113,11 @@ namespace Chopsticks
             bool playing = true;
             while (playing)
             {
-                ShowCurrentTotals();
-                playing = InitializeAttack(_playerOne, _playerTwo);
+                playing = ShowCurrentTotals();
+                ChooseAction(_playerOne, _playerTwo);
                 if (!playing) continue;
-                ShowCurrentTotals();
-                playing = InitializeAttack(_playerTwo, _playerOne);
+                playing = ShowCurrentTotals();
+                ChooseAction(_playerTwo, _playerOne);
             }
             ShowCurrentTotals();
             GameOver();
@@ -190,11 +192,14 @@ namespace Chopsticks
             _playerTwo = new Player(Console.ReadLine());
         }
 
-        private void ShowCurrentTotals()
+        private bool ShowCurrentTotals()
         {
             Console.Clear();
             Console.WriteLine($"{_playerOne.Name}: Left - {_playerOne.LeftHand}   Right - {_playerOne.RightHand}\n\n" +
                               $"{_playerTwo.Name}: Left - {_playerTwo.LeftHand}   Right - {_playerTwo.RightHand}\n");
+            if (_playerOne.LeftHand == 0 && _playerOne.RightHand == 0)
+                return false;
+            return _playerTwo.LeftHand != 0 || _playerTwo.RightHand != 0;
         }
 
         public void AttackerTarget(string name, int attackingNumber, Player defender)
@@ -253,6 +258,29 @@ namespace Chopsticks
             }
         }
 
+        public void ChooseAction(Player playerAttacking, Player playerDefending)
+        {
+            Console.WriteLine("Press 1 to attack, or 2 to split.");
+            var response = Console.ReadLine();
+            var responding = true;
+            while (responding)
+            {
+                switch (response)
+                {
+                    case "1":
+                        InitializeAttack(playerAttacking, playerDefending);
+                        break;
+                    case "2":
+                        SplitHands(playerAttacking);
+                        break;
+                    default:
+                        Console.WriteLine("Please enter a valid selection.");
+                        Console.ReadKey();
+                        break;
+                }
+            }
+        }
+
         public void SplitHands(Player player)
         {
             int leftHand = player.LeftHand;
@@ -263,7 +291,12 @@ namespace Chopsticks
                 Console.WriteLine("Input the total you want to allocate in your left hand:");
                 var response = Convert.ToInt32(Console.ReadLine());
                 if (response == leftHand || response == rightHand || response >= 4)
+                {
+                    Console.WriteLine("You can't kill a hand, or just swap the numbers.\n" +
+                                      "Press anything to continue...");
+                    Console.ReadKey();
                     continue;
+                }
                 player.LeftHand = response;
                 player.RightHand = leftHand + rightHand - response;
                 responding = false;
